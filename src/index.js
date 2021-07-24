@@ -17,11 +17,12 @@ inputRef.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
 
 function onInput(e) {
   const searchQuery = e.target.value.trim();
-  // const searchQuery = 'swi';
+  // const searchQuery = 'sw';
 
   if (searchQuery === '') {
     Notify.failure('Search query must not be empty or just spaces');
     redrawInterface();
+    console.clear();
     return;
   }
 
@@ -30,6 +31,8 @@ function onInput(e) {
     .then(data => {
       if (data.length > MAX_LENGTH) {
         Notify.info('Too many matches found. Please enter a more specific name.');
+        console.clear();
+        console.log(data);
         return;
       }
 
@@ -37,11 +40,13 @@ function onInput(e) {
         const { name, flag, capital, population, languages } = data[0];
         const languagesNames = languages.map(lang => lang.name).join(', ');
 
+        console.clear();
         console.table({ flag, name, capital, population, languagesNames });
         redrawInterface({ flag, name, capital, population, languagesNames });
         return { flag, name, capital, population, languagesNames };
       }
 
+      console.clear();
       console.log(
         data.map(({ flag, name }) => {
           return { flag, name };
@@ -57,6 +62,7 @@ function onInput(e) {
       });
     })
     .catch(error => {
+      console.clear();
       console.error('error: ', error);
       // console.log('error.message: ', error.message);
       // console.dir(error);

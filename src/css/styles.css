@@ -13,9 +13,39 @@ body {
 #search-box {
   font: inherit;
   padding: 8px;
+  width: 300px;
   max-width: 320px;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 p {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+span {
+  font-weight: 400;
+}
+
+.country-name {
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.8;
+}
+
+.country-list {
+  margin-top: 8px;
+  margin-bottom: 0;
+  list-style: none;
+  padding-left: 0;
+  line-height: 1.8;
+}
+
+img.flag {
+  width: 24px;
+}
+
+.countries-names {
+  margin-left: 8px;
 }
