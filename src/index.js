@@ -1,6 +1,9 @@
 import './css/styles.css';
 
 import debounce from 'lodash.debounce';
+import { Notify } from 'notiflix';
+
+import { fetchCountries } from './js/fetchCountries';
 
 const inputRef = document.querySelector('input#search-box');
 
@@ -16,57 +19,39 @@ function onInput(e) {
   // const searchQuery = 'belar';
 
   if (searchQuery === '') {
-    console.log('searchQuery must not be empty or just spaces');
+    Notify.failure('Search query must not be empty or just spaces');
     return;
   }
 
-  console.log('searchQuery: ', searchQuery);
-  fetchCountry(searchQuery)
+  // console.log('searchQuery: ', searchQuery);
+  fetchCountries(searchQuery)
     .then(data => {
       if (data.length > MAX_LENGTH) {
-        console.log('Result is so large... Specify the searchQuery');
+        Notify.info('Too many matches found. Please enter a more specific name.');
         return;
       }
+
       if (data.length === 1) {
         const { name, flag, capital, population, languages } = data[0];
-
         const languagesNames = languages.map(lang => lang.name);
 
-        // console.table(languages);
-
-        // console.log('languagesNames: ', languagesNames);
-
-        console.log('data.length === 1');
-        console.log(flag, name, capital, population, languagesNames);
-        return name;
+        console.table({ flag, name, capital, population, languagesNames });
+        return { flag, name, capital, population, languagesNames };
       }
 
-      data.forEach(({ flag, name }) => {
-        console.log(flag, name);
+      console.log(
+        data.map(({ flag, name }) => {
+          return { flag, name };
+        }),
+      );
+      return data.map(({ flag, name }) => {
+        return { flag, name };
       });
-      return data;
     })
     .catch(error => {
-      console.log('error: ', error);
-      console.log('error.message: ', error.message);
-      console.dir(error);
-    });
-}
-
-function fetchCountry(countryName) {
-  return fetch(`https://restcountries.eu/rest/v2/name/${countryName}`)
-    .then(res => {
-      console.log('res: ', res);
-
-      if (res.status !== 200) {
-        throw new Error(404);
-        // return;
-      }
-      return res.json();
-    })
-    .then(data => {
-      console.log('data: ', data);
-
-      return data;
+      console.error('error: ', error);
+      // console.log('error.message: ', error.message);
+      // console.dir(error);
+      Notify.failure('Oops, there is no country with that name');
     });
 }
