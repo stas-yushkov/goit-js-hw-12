@@ -4,6 +4,7 @@ import debounce from 'lodash.debounce';
 import { Notify } from 'notiflix';
 
 import { fetchCountries } from './js/fetchCountries';
+import { redrawInterface } from './js/redrawInterface';
 
 const inputRef = document.querySelector('input#search-box');
 
@@ -12,14 +13,15 @@ const MAX_LENGTH = 10;
 
 inputRef.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
 
-// onInput();
+onInput();
 
 function onInput(e) {
-  const searchQuery = e.target.value.trim();
-  // const searchQuery = 'belar';
+  // const searchQuery = e.target.value.trim();
+  const searchQuery = 'swi';
 
   if (searchQuery === '') {
     Notify.failure('Search query must not be empty or just spaces');
+    redrawInterface();
     return;
   }
 
@@ -33,13 +35,19 @@ function onInput(e) {
 
       if (data.length === 1) {
         const { name, flag, capital, population, languages } = data[0];
-        const languagesNames = languages.map(lang => lang.name);
+        const languagesNames = languages.map(lang => lang.name).join(', ');
 
         console.table({ flag, name, capital, population, languagesNames });
+        redrawInterface({ flag, name, capital, population, languagesNames });
         return { flag, name, capital, population, languagesNames };
       }
 
       console.log(
+        data.map(({ flag, name }) => {
+          return { flag, name };
+        }),
+      );
+      redrawInterface(
         data.map(({ flag, name }) => {
           return { flag, name };
         }),
