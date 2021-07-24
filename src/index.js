@@ -13,11 +13,11 @@ const MAX_LENGTH = 10;
 
 inputRef.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
 
-onInput();
+// onInput();
 
 function onInput(e) {
-  // const searchQuery = e.target.value.trim();
-  const searchQuery = 'swi';
+  const searchQuery = e.target.value.trim();
+  // const searchQuery = 'swi';
 
   if (searchQuery === '') {
     Notify.failure('Search query must not be empty or just spaces');
